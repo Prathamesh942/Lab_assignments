@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void print(vector<vector<int>> board) {
+void print(vector<vector <int> > board) {
   int n = board.size();
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
@@ -16,7 +16,9 @@ void print(vector<vector<int>> board) {
   cout<<"\n";
 }
 
-int geth(vector<vector<int>> board) {
+
+
+int geth(vector<vector <int> > board) {
   int h = 0;
   int n = board.size();
   for (int i = 0; i < n; i++) {
@@ -39,16 +41,16 @@ bool validpos(int n, int i, int j) {
   return true;
 }
 
-bool validstate(vector<vector<int>> board) {
+bool validstate(vector<vector <int> > board) {
   int n = board.size();
-  vector<vector<int>> invalid;
+  vector<vector <int> > invalid;
   for (int i = 0; i < n; i++) {
     invalid.push_back(vector<int>(n, -1));
   }
   return invalid != board;
 }
 
-vector<vector<int>> move(vector<vector<int>> board, char direction) {
+vector<vector <int> > move(vector<vector <int> > board, char direction) {
   int p, q;
   int n = board.size();
   for (int i = 0; i < n; i++) {
@@ -60,7 +62,7 @@ vector<vector<int>> move(vector<vector<int>> board, char direction) {
       }
     }
   }
-  vector<vector<int>> invalid;
+  vector<vector <int> > invalid;
   for (int i = 0; i < n; i++) {
     invalid.push_back(vector<int>(n, -1));
   }
@@ -99,68 +101,63 @@ vector<vector<int>> move(vector<vector<int>> board, char direction) {
   return board;
 }
 
-void play(vector<vector<int>> state1, vector<vector<int>> state2) {
+string code(vector<vector <int> > state){
+    string cd="";
+    for(int i=0; i<3; i++){
+        for(int j=0; j<3; j++){
+            cd+=(state[i][j] - 'a');
+        }
+    }
+    return cd;
+}
+
+int play(vector<vector <int> > state1, vector<vector <int> > state2,map<string,int>& mp) {
   print(state1);
+  if(!validstate(state1) || mp[code(state1)]){
+    return -1;
+  }
+  mp[code(state1)]++;
   int h = geth(state1);
   if (h == 0) {
-    return;
+    return 1;
   }
-  vector<vector<int>> r1, r2, r3, r4;
+  vector<vector <int> > r1, r2, r3, r4;
   vector<int> arrh(4, 999);
   r1 = move(state1, 'U');
   r2 = move(state1, 'D');
   r3 = move(state1, 'R');
   r4 = move(state1, 'L');
-  if (validstate(r1)) {
-    arrh[0] = geth(r1);
-  }
-  if (validstate(r2)) {
-    arrh[1] = geth(r2);
-  }
-  if (validstate(r3)) {
-    arrh[2] = geth(r3);
-  }
-  if (validstate(r4)) {
-    arrh[3] = geth(r4);
-  }
-  int mini;
-  int minh = 999;
-  for (int i = 0; i < 4; i++) {
-    if (minh > arrh[i]) {
-      minh = arrh[i];
-      mini = i;
+  if(play(r1,state2,mp)==-1){
+    if(play(r2,state2,mp)==-1){
+        if(play(r3,state2,mp)==-1){
+           if(play(r4,state2,mp)==-1){
+            return -1;
+           }else{
+            return 1;
+           }
+        }else{
+            return 1;
+        }
+    }else{
+        return 1;
     }
   }
-  switch(mini){
-  case 0:
-    state1 = r1;
-    break;
-  case 1:
-    state1 = r2;
-    break;
-  case 2:
-    state1 = r3;
-    break;
-  case 3:
-    state1 = r4;
-    break;
-  }
-
-  play(state1, state2);
+  return 1;
 }
 
 class game {
 private:
-  vector<vector<int>> state1;
-  vector<vector<int>> state2;
+  vector<vector <int> > state1;
+  vector<vector <int> > state2;
   int n;
 
-public:
-  game(vector<vector<int>> state1, int n) {
+public: 
+  game(vector<vector <int> > state1, int n) {
     this->n=n;
     this->state1 = state1;
     for (int i = 0; i < n; i++) {
-      state2.push_back({});
+      vector<int> empty;
+      state2.push_back(empty);
       for (int j = 0; j < n; j++) {
         state2[state2.size() - 1].push_back((i * 3) + j + 1);
       }
@@ -171,10 +168,19 @@ public:
     print(state1);
     print(state2);
   }
-  void solution() { play(state1, state2); }
+  map< string , int > mp;
+  void solution() { play(state1, state2,mp); }
 };
 
 int main() {
-  game g({{0,1,3}, {4,2,5}, {7,8,6}}, 3);
+  //vector< vector<int> > ss = {{0,1,3}, {4,2,5}, {7,8,6}};
+  //0 3 1 2 4 5 7 8 6
+  vector< vector<int> > ss(3, vector<int> (3,0));
+  for(int i=0; i<3; i++){
+    for(int j=0; j<3; j++){
+        cin>>ss[i][j];
+    }
+  }
+  game g(ss, 4);
   g.solution();
 }
