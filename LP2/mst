@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef pair<int,int> pii;
+
+void addedge(vector<vector<pii>>& adj, int u, int v, int w){
+    adj[u].push_back(make_pair(v,w));
+    adj[v].push_back(make_pair(u,w));
+}
+
+vector<int> primMST(vector<vector<pii>>& adj,int n){
+    vector<int> parent(n,-1);
+    vector<int> key(n,INT_MAX);
+    vector<bool> isin(n,false);
+    
+    priority_queue<pii, vector<pii>, greater<pii> > pq;
+    key[0] = 0;
+    pq.push(make_pair(0,0));
+    
+    while(!pq.empty()){
+        int u = pq.top().second;
+        pq.pop();
+        
+        isin[u]=true;
+        
+        for(auto it:adj[u]){
+            int v=it.first;
+            int wt = it.second;
+            
+            if(!isin[v] && wt < key[v]){
+                key[v]=wt;
+                parent[v]=u;
+                pq.push(make_pair(key[v],v));
+            }
+        }
+    }
+    return parent;
+}
+
+void print(vector<int> parent, vector<vector<pii>>& adj){
+    cout<<"MST is:\n";
+    for(int i=1; i<parent.size(); i++){
+        cout<<parent[i]<<" "<<i<<"\n";
+    }
+}
+    
+    
+int main(){
+    int m,n;
+    cout<<"Enter no of vertices and edges\n";
+    cin>>n>>m;
+    vector<vector<pii>> adj(n);
+    cout<<"Enter edges in order source destination and weight";
+    for(int i=0; i<m; i++){
+        int src,dest,wt;
+        cin>>src>>dest>>wt;
+        addedge(adj,src,dest,wt);
+    }
+    vector<int> parent = primMST(adj, n);
+    print(parent,adj);
+}
