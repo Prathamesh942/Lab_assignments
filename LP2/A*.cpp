@@ -39,7 +39,7 @@ vector<cell*> aStar(vector<vector<int>> maze, cell* src, cell* dest){
     vector<int> dr = {-1,1,0,0};
     vector<int> dc = {0,0,-1,1};
     
-    priority_queue<cell*, vector<cell*>, function<bool(cell*,cell*)>> pq([](cell* a, cell* b){return a->f < b->f;});
+    priority_queue<cell*, vector<cell*>, function<bool(cell*,cell*)>> pq([](cell* a, cell* b){return a->f > b->f;});
     
     vector<vector<bool>> visited(maze.size(), vector<bool>(maze[0].size(), false));
     
@@ -95,14 +95,14 @@ void print(vector<cell*> path){
 
 int main(){
     vector<vector<int>> maze = {
-        {0, 1, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 1, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 0, 0}
+        {0, 1, 0, 0, 0, 0},
+        {0, 0, 1, 1, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 1, 0},
+        {0, 0, 0, 0, 1, 0}
     };
     cell* src = new cell(0,0);
-    cell* dest = new cell(4,4);
+    cell* dest = new cell(4,5);
     
     vector<cell*> path = aStar(maze,src,dest);
     print(path);
