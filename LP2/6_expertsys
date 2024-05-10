@@ -1,0 +1,63 @@
+class Flight:
+    def __init__(self, origin, destination, layover=None):
+        self.origin = origin
+        self.destination = destination
+        self.layover = layover
+
+class Cargo:
+    def __init__(self, destination):
+        self.destination = destination
+
+class AirlineScheduler:
+    def __init__(self):
+        self.flights = []
+        self.cargos = []
+
+    def add_flight(self, flight):
+        self.flights.append(flight)
+
+    def add_cargo(self, cargo):
+        self.cargos.append(cargo)
+
+    def schedule_flights(self, origin, destination):
+        available_flights = []
+        for flight in self.flights:
+            if flight.origin == origin and flight.destination == destination:
+                if flight.layover:
+                    available_flights.append(f"Layover flight available from {flight.origin} via {flight.layover} to {flight.destination}")
+                else:
+                    available_flights.append(f"Direct flight available from {flight.origin} to {flight.destination}")
+        return available_flights
+
+    def schedule_cargos(self):
+        for cargo in self.cargos:
+            print(f"Schedule cargo to be delivered to {cargo.destination}")
+
+def main():
+    scheduler = AirlineScheduler()
+    
+    # Define flights
+    scheduler.add_flight(Flight(origin="A", destination="B"))
+    scheduler.add_flight(Flight(origin="A", layover="C", destination="B"))
+
+    # Define cargos
+    scheduler.add_cargo(Cargo(destination="B"))
+    
+    # Get user input for flight details
+    origin = input("Enter origin: ")
+    destination = input("Enter destination: ")
+    
+    # Run the expert system
+    print("Flight Schedule:")
+    available_flights = scheduler.schedule_flights(origin, destination)
+    if available_flights:
+        for flight in available_flights:
+            print(flight)
+    else:
+        print("No flights available for the given route.")
+
+    print("\nCargo Schedule:")
+    scheduler.schedule_cargos()
+
+if __name__ == "__main__":
+    main()
