@@ -1,15 +1,24 @@
-from nltk.chat.util import Chat, reflections
+import webbrowser
+from datetime import date,datetime
 
-pairs = [
-	[
-		r"what is your name ?",
-		["My name is --"]
-	],
-]
+responses = {
+    "Hii": "Hii bro:",
+    "hello": "Hello",
+    "date" : str(datetime.now()),
+    "youtube" : "Sure",
+    "default" : "?"
+}
 
-def mybot():
-	print("Hii")
-	chat = Chat(pairs, reflections)
-	chat.converse()
+def chat():
+    while(True):
+        ui = input("YOU:").lower()
+        print(ui)
+        res = responses.get(ui,responses["default"])
+        print("BOT:",res)
+        if ui=="youtube":
+            webbrowser.open("youtube.com")
+        if ui=="bye":
+            print("BYE bRo")
+            break
 
-mybot()
+chat()
